@@ -1,5 +1,15 @@
 :-consult('data.pl').
 
+%1
+
+
+%2
+
+
+
+%3
+
+
 
 % Define a predicate to get the number of items in a customer's order
 % question 4
@@ -58,9 +68,13 @@ whyToBoycott(ItemOrCompanyName, Justification) :-
     boycott_company(ItemOrCompanyName, Justification).
 
 
+%8
+
+%...
+
+
 
 %9
-
 recursiveFunctionReplaceBoycottItemsFromAnOrder([H|T],Acc,ResultList):-
     item(H,ComName,_),
     boycott_company(ComName,_),
@@ -98,3 +112,10 @@ getTheDifferenceInPriceBetweenItemAndAlternative(BoycottItem, A, DiffPrice):-
     alternative(BoycottItem,A),
     item(A,_,Price2),
     DiffPrice is Price1 - Price2.
+
+
+
+%12
+
+
+%...
