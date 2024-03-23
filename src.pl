@@ -1,14 +1,38 @@
 :-consult('data.pl').
 
 %1
+list_orders(CustUserName, Orders) :-
+	customer(CustID, CustUserName),
+	list_orders_helper(CustID, [], Orders).
 
+list_orders_helper(CustID, Acc, Orders) :-
+	order(CustID, OrderID, Items),
+	Order = order(CustID, OrderID, Items),
+	\+ is_member(Order, Acc),
+	!,
+	list_orders_helper(CustID, [Order|Acc], Orders).
+
+list_orders_helper(_, Orders, Orders).
+
+is_member(Item, [Item|_]).
+is_member(Item, [_|Tail]) :-
+	is_member(Item, Tail).
 
 %2
 
+countOrdersOfCustomer(CustUserName, Count) :-
+	list_orders(CustUserName, Orders),
+	list_len(Orders, Count).
 
+list_len([], 0).
+list_len([_|Tail], Length) :-
+	list_len(Tail, TailLength),
+	Length is TailLength + 1.
 
 %3
-
+getItemsInOrderById(CustomerName,OrderId,Items):-
+    customer(CustomerId,CustomerName),
+    order(CustomerId,OrderId,Items),!.
 
 
 % Define a predicate to get the number of items in a customer's order
