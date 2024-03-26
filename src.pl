@@ -73,9 +73,11 @@ items_price([Head|Tail], TotalPrice) :-
 
 isBoycott(ItemName) :-
 	item(ItemName, CompanyName, _),
-	boycott_company(CompanyName, _).
+	boycott_company(CompanyName, _),
+	!.
 isBoycott(CompanyName) :-
-	boycott_company(CompanyName, _).
+	boycott_company(CompanyName, _),
+	!.
 
 
 
@@ -109,28 +111,20 @@ remove_boycott_items([Head|Tail], [Head|NewTail]) :-
 
 % 9. Given an username and order ID, update the order such that all boycott items are replaced by an alternative (if exists).
 
-recursiveFunctionReplaceBoycottItemsFromAnOrder([H|T],Acc,ResultList):-
-    item(H,ComName,_),
-    boycott_company(ComName,_),
-    alternative(H,Alter),
-    recursiveFunctionReplaceBoycottItemsFromAnOrder(T, [Alter|Acc],ResultList).
+replaceBoycottItemsFromAnOrder(CustUserName, OrderID, NewItems) :-
+	customer(CustID, CustUserName),
+	order(CustID, OrderID, Items),
+	replace_boycott_items(Items, NewItems).
 
-
-recursiveFunctionReplaceBoycottItemsFromAnOrder([H|T],Acc,ResultList):-
-    item(H,ComName,_),
-    \+ boycott_company(ComName,_),
-    recursiveFunctionReplaceBoycottItemsFromAnOrder(T, [H|Acc],ResultList).
-
-
-
-recursiveFunctionReplaceBoycottItemsFromAnOrder(_,ResultList,ResultList).
-
-
-replaceBoycottItemsFromAnOrder(Username, OrderID, NewList):-
-    customer(CustID,Username),
-    order(CustID,OrderID,OldList),
-    recursiveFunctionReplaceBoycottItemsFromAnOrder(OldList,[],NewList),
-    !.
+replace_boycott_items([], []).
+replace_boycott_items([Head|Tail], [NewHead|NewTail]) :- 
+	item(Head, CompanyName, _),
+	boycott_company(CompanyName, _),
+	alternative(Head, NewHead),
+	!,
+	replace_boycott_items(Tail, NewTail).
+replace_boycott_items([Head|Tail], [Head|NewTail]) :-
+	replace_boycott_items(Tail, NewTail).
 
 % 10. Given an username and order ID, calculate the price of the order after replacing all boycott items by its alternative (if it exists).
 
