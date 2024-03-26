@@ -29,6 +29,7 @@ list_len([_|Tail], Length) :-
 	list_len(Tail, TailLength),
 	Length is TailLength + 1.
 
+
 %3
 getItemsInOrderById(CustomerName,OrderId,Items):-
     customer(CustomerId,CustomerName),
@@ -36,10 +37,11 @@ getItemsInOrderById(CustomerName,OrderId,Items):-
 
 
 %  4
-num_items_in_order(CustomerName, OrderID, NumItems) :-
-    customer(CustomerID, CustomerName),
-    order(CustomerID, OrderID, Items),
-    length(Items, NumItems).
+num_items_in_order(CustomerName, OrderID, ItemsCount) :-
+    customer(CustID, CustUserName),
+    order(CustID, OrderID, Items),
+    list_len(Items, ItemsCount).
+
 
 %  5
 calcPriceOfOrder(CustomerName, OrderID, TotalPrice) :-
